@@ -12,7 +12,7 @@ function Menu() {
     const fetchMenu = async () => {
       try{
         const response = await axios.get(
-          process.env.REACT_APP_FETCH_ORDERS_URL + `\\?category=${category}`,
+          process.env.REACT_APP_FETCH_MENU_URL + `\\?category=${category}`,
           {
             withCredentials: true
           }
