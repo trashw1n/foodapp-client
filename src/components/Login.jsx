@@ -24,6 +24,8 @@ function Login() {
             {withCredentials: true}
           );
           if(response.status === 200){
+            setName('');
+            setPassword('');
             setIsValid('valid');
             setMessage(response.data.msg);
           }
