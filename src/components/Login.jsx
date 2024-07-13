@@ -4,6 +4,7 @@ import '../styles/Login.css';
 import Cookies from 'js-cookie';
 import dotenv from 'dotenv';
 import { useNavigate } from 'react-router-dom';
+import useAuthToken from '../hooks/useAuthToken';
 
 function Login() {
     const navigate = useNavigate();
@@ -12,6 +13,7 @@ function Login() {
     const [role, setRole] = useState('customer');
     const [message, setMessage] = useState('');
     const [isValid, setIsValid] = useState('valid');
+    const {setToken} = useAuthToken();
     const handleRegister = async () => {
       if(!name || !password){
         setMessage('please fill in the required details');
@@ -20,8 +22,7 @@ function Login() {
         try{
           const response = await axios.post(
             process.env.REACT_APP_REGISTER_URL, 
-            {name, password, role},
-            {withCredentials: true}
+            {name, password, role}
           );
           if(response.status === 200){
             setName('');
@@ -45,12 +46,12 @@ function Login() {
         try{
           const response = await axios.post(
             process.env.REACT_APP_LOGIN_URL, 
-            {name, password, role},
-            {withCredentials: true}
+            {name, password, role}
           );
           if(response.status === 200){
             setIsValid('valid');
             setMessage(response.data.msg);
+            setToken(response.data.token);
             setTimeout(() => navigate(`/${role}`), 1500);
           }
         } catch(err){

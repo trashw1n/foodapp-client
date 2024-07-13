@@ -3,19 +3,19 @@ import MenuItem from './MenuItem';
 import Cart from './Cart';
 import '../styles/Menu.css';
 import axios from 'axios';
+import useAuthToken from '../hooks/useAuthToken';
 
 function Menu() {
   const [category, setCategory] = useState('all');
   const [cartVisible, setCartVisible] = useState(false);
   const [menu, setMenu] = useState([]);
+  const {token} = useAuthToken();
   useEffect(() => {
     const fetchMenu = async () => {
       try{
         const response = await axios.get(
           process.env.REACT_APP_FETCH_MENU_URL + `\\?category=${category}`,
-          {
-            withCredentials: true
-          }
+          {headers: {'Authorization': `Bearer ${token}`}}
         );
         if(response.status === 200){
           setMenu(response.data.items);

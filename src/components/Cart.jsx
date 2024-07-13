@@ -3,12 +3,14 @@ import {useCart} from '../contexts/CartContext';
 import '../styles/Cart.css';
 import axios from 'axios';
 import CartItem from './CartItem';
+import useAuthToken from '../hooks/useAuthToken';
 
 function Cart({setCartVisible}) {
     const {cart, emptyCart} = useCart();
     const [msg, setMsg] = useState('');
     const [isValid, setIsValid] = useState('valid');
     const [tableNumber, setTableNumber] = useState('');
+    const {token} = useAuthToken();
     const placeOrder = async () => {
         const table = tableNumber.length > 0? parseInt(tableNumber):0;
         if(table < 1 || table > 10 || table === undefined){
@@ -26,7 +28,7 @@ function Cart({setCartVisible}) {
             const response = await axios.post(
                 process.env.REACT_APP_PLACEORDER_URL, 
                 {items: item_ids, table_num: table},
-                {withCredentials: true}
+                {headers: {'Authorization': `Bearer ${token}`}}
             );
             if(response.status === 200){
                 emptyCart();

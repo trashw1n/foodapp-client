@@ -2,15 +2,17 @@ import React, { useState } from 'react';
 import '../styles/StaffDashboard.css';
 import OrderItem from './OrderItem';
 import axios from 'axios';
+import useAuthToken from '../hooks/useAuthToken';
 
 function StaffDashboard() {
   const [orders, setOrders] = useState({});
   const [msg, setMsg] = useState(['', 'invisible']);
+  const {token} = useAuthToken();
   const fetchOrders = async () => {
     try {
       const response = await axios.get(
         process.env.REACT_APP_FETCH_ORDERS_URL,
-        {withCredentials: true}
+        {headers: {'Authorization': `Bearer ${token}`}}
       );
       if(response.status === 200){
         setOrders(response.data.orders);
@@ -23,9 +25,7 @@ function StaffDashboard() {
     try {
       const response = await axios.delete(
         process.env.REACT_APP_COMPLETEORDER_URL + `\\?table_num=${table}`,
-        {
-          withCredentials: true
-        }
+        {headers: {'Authorization': `Bearer ${token}`}}
       );
       if(response.status == 200){
         const newOrders = {...orders};
